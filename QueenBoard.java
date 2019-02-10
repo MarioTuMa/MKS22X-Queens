@@ -52,47 +52,94 @@ public class QueenBoard{
     String to_return = "";
     for(int i = 0; i < board.length; i ++){
       for(int j = 0; j < board.length; j ++){
-        to_return = to_return + (board[i][j]);
+        if(board[i][j]==-1){
+          to_return += "Q ";
+        }
+        else{
+          to_return += "_ ";
+        }
       }
-      to_return = to_return+"/";
+      to_return = to_return+"\n";
     }
     return to_return;
   }
 
+  private boolean backtrack(){
+    int last_q_index = -1;
+    for(int i = 0; i < board.length; i ++){
 
+      if(board[queen_counter - 1][i] == -1){
+        last_q_index = i;
+      }
+
+    }
+
+
+
+    removeQueen(queen_counter-1,last_q_index);
+    // System.out.println("removing queen");
+    // System.out.println(toString());
+    for(int i = last_q_index + 1; i < board.length; i ++){
+      if(board[queen_counter][i]==0){
+        addQueen(queen_counter,i);
+        return solve();
+      }
+    }
+    return backtrack();
+  }
 
   public boolean solve(){
+
     if(queen_counter == board.length){
-      System.out.println(board.toString());
+
       return true;
     }
+    if(board[0][board.length-1] == -1){
+      System.out.println("This is unsolvable, pls help.");
+      return false;
+    }
     else{
+      boolean no_spaces = true;
+      int good_spot = -1;
 
       for(int i = 0; i < board.length; i ++){
+
         if(board[queen_counter][i] == 0){
-          addQueen(queen_counter,i);
-          if(solve()){
-            return true;
+          no_spaces = false;
+          if(good_spot == -1){
+            good_spot = i;
           }
-          removeQueen(queen_counter,i);
         }
+
       }
-      return false;
+
+
+      if(no_spaces){
+        return backtrack();
+
+      }
+      else{
+            addQueen(queen_counter,good_spot);
+            return solve();
+      }
     }
   }
 
   public int countSolutions(){
-    return 3;
+    
+    int counter = 0;
+    while(solve()){
+      backtrack();
+      counter++;
+    }
+    return counter;
   }
   public static void main(String args[]){
-    System.out.println("hi");
+
     QueenBoard qb = new QueenBoard(8);
-    System.out.println(qb.toString());
-    qb.addQueen(1,1);
-    System.out.println(qb.toString());
-    qb.removeQueen(1,1);
-    System.out.println(qb.toString());
-    qb.solve();
-    System.out.println(qb.toString());
+
+    System.out.println(qb.countSolutions());
+
+
   }
 }
