@@ -94,8 +94,8 @@ public class QueenBoard{
 
       return true;
     }
-    if(board[0][board.length-1] == -1){
-      System.out.println("This is unsolvable, pls help.");
+    if(board[0][(board.length + 1)/2] == -1){
+
       return false;
     }
     else{
@@ -126,17 +126,27 @@ public class QueenBoard{
   }
 
   public int countSolutions(){
-    
+
     int counter = 0;
     while(solve()){
       backtrack();
       counter++;
     }
+    counter *= 2;
+
+    if(board.length % 2 ==1){
+      QueenBoard nb = new QueenBoard(board.length);
+      nb.addQueen(0,board.length/2);
+      while(nb.solve()){
+        nb.backtrack();
+        counter--;
+      }
+    }
     return counter;
   }
   public static void main(String args[]){
 
-    QueenBoard qb = new QueenBoard(8);
+    QueenBoard qb = new QueenBoard(10);
 
     System.out.println(qb.countSolutions());
 
