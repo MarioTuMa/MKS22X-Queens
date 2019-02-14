@@ -64,40 +64,15 @@ public class QueenBoard{
     return to_return;
   }
 
-  private boolean backtrack(){
-    int last_q_index = -1;
-    for(int i = 0; i < board.length; i ++){
 
-      if(board[queen_counter - 1][i] == -1){
-        last_q_index = i;
-      }
-
-    }
-
-
-
-    removeQueen(queen_counter-1,last_q_index);
-    // System.out.println("removing queen");
-    // System.out.println(toString());
-    for(int i = last_q_index + 1; i < board.length; i ++){
-      if(board[queen_counter][i]==0){
-        addQueen(queen_counter,i);
-        return solve();
-      }
-    }
-    return backtrack();
-  }
 
   public boolean solve(){
 
     if(queen_counter == board.length){
-
+      //System.out.println(toString());
       return true;
     }
-    if(board[0][(board.length + 1)/2] == -1){
 
-      return false;
-    }
     else{
       boolean no_spaces = true;
       int good_spot = -1;
@@ -105,50 +80,82 @@ public class QueenBoard{
       for(int i = 0; i < board.length; i ++){
 
         if(board[queen_counter][i] == 0){
-          no_spaces = false;
-          if(good_spot == -1){
-            good_spot = i;
+          addQueen(queen_counter,i);
+          if(solve()){
+            return true;
           }
+          removeQueen(queen_counter-1,i);
+        }
+
+
+      }
+
+      return false;
+
+    }
+  }
+
+
+  private boolean backtrack(){
+    int last_q_index = -1;
+    if(queen_counter !=0){
+      for(int i = 0; i < board.length; i ++){
+
+        if(board[queen_counter - 1][i] == -1){
+          last_q_index = i;
         }
 
       }
+      removeQueen(queen_counter-1,last_q_index);
+    }
+    else{
+      return false;
+    }
+    boolean didnt_do_stuff = true;
 
-
-      if(no_spaces){
-        return backtrack();
-
-      }
-      else{
-            addQueen(queen_counter,good_spot);
-            return solve();
+    for(int i = last_q_index + 1; i < board.length; i ++){
+      if(board[queen_counter][i]==0){
+        addQueen(queen_counter,i);
+        didnt_do_stuff = false;
+        return true;
       }
     }
+    if(didnt_do_stuff){
+      return backtrack();
+    }
+    if(last_q_index == -1){
+      return false;
+    }
+    else{
+      return false;
+    }
+
+
   }
 
   public int countSolutions(){
-
-    int counter = 0;
-    while(solve()){
-      backtrack();
+    int counter =0;
+    if(solve()){
       counter++;
-    }
-    counter *= 2;
-
-    if(board.length % 2 ==1){
-      QueenBoard nb = new QueenBoard(board.length);
-      nb.addQueen(0,board.length/2);
-      while(nb.solve()){
-        nb.backtrack();
-        counter--;
+    };
+    while(backtrack()){
+      if(solve()){
+        counter++;
+        //System.out.println(counter);
       }
     }
+
     return counter;
   }
+
   public static void main(String args[]){
+    QueenBoard qb = new QueenBoard(8);
 
-    QueenBoard qb = new QueenBoard(10);
-
-    System.out.println(qb.countSolutions());
+    System.out.println(qb.solve());
+    System.out.println(qb.toString());
+    QueenBoard qb1 = new QueenBoard(16);
+     //
+    System.out.println(qb1.countSolutions());
 
 
   }
