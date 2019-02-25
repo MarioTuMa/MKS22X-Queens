@@ -147,15 +147,28 @@ public class QueenBoard{
 
     return counter;
   }
+  public static void runTest(int i){
+    QueenBoard b;
+    int[]tests =   {1,2,3,4,5,8};
+    int[]answers = {1,0,0,2,10,92};
+    if(i >= 0 && i < tests.length ){
+      int size = tests[i];
+      int correct = answers[i];
+      b = new QueenBoard(size);
+      int ans  = b.countSolutions();
+
+      if(correct==ans){
+        System.out.println("PASS board size: "+tests[i]+" "+ans);
+      }else{
+        System.out.println("FAIL board size: "+tests[i]+" "+ans+" vs "+correct);
+      }
+    }
+  }
 
   public static void main(String args[]){
-    QueenBoard qb = new QueenBoard(8);
-
-    System.out.println(qb.solve());
-    System.out.println(qb.toString());
-    QueenBoard qb1 = new QueenBoard(16);
-     //
-    System.out.println(qb1.countSolutions());
+    for(int i=0;i<7;i++){
+      runTest(i);
+    }
 
 
   }
